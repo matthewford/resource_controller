@@ -39,19 +39,27 @@ module ResourceController
           set_flash_now(action)
         end
   
-        # Sets the regular flash (i.e. flash[:notice] = '...')
+        # Sets the flash, can pass hash ie. flash {:error => "failed to save!"}
         #
         def set_normal_flash(action)
           if f = options_for(action).flash
-            flash[:notice]     = f.is_a?(Proc) ? instance_eval(&f) : options_for(action).flash
+            if f.is_a?(Hash)
+              flash[f.keys.first] = f[f.keys.first]
+            else
+              flash[:notice] = f.is_a?(Proc) ? instance_eval(&f) : options_for(action).flash
+            end
           end
         end
-  
+
         # Sets the flash.now (i.e. flash.now[:notice] = '...')
         #
         def set_flash_now(action)
           if f = options_for(action).flash_now
-            flash.now[:notice] = f.is_a?(Proc) ? instance_eval(&f) : options_for(action).flash_now
+            if f.is_a?(Hash)
+              flash[f.keys.first] = f[f.keys.first]
+            else
+              flash.now[:notice] = f.is_a?(Proc) ? instance_eval(&f) : options_for(action).flash_now
+            end
           end
         end
   
